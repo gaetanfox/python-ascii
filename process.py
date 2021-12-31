@@ -1,7 +1,7 @@
 import glob
 import shutil
 import os
-from PIL import Image, ImageOps, ImageEnhance
+from PIL import Image, ImageOps, ImageEnhance, ImageDraw, ImageFont
 
 
 class Digitizer:
@@ -19,6 +19,7 @@ class Digitizer:
 
     def make_grayscale(self):
         self.img = ImageOps.grayscale(self.img)
+        self.img = self.img.convert("RGB")
 
     def make_upside_down(self):
         self.img = self.img.rotate(180)
@@ -36,8 +37,13 @@ class Digitizer:
             x = 0
             y = (h - w) * 0.5
             box = (x, y, x + w, y + w)
-
         self.img = self.img.resize((size, size), box=box)
+
+    def add_watermark(self):
+        font = ImageFont.truetype("ibm-plex-mono.ttf", 16)
+        drawer = ImageDraw.Draw(self.img)
+
+        drawer.text((32, 32), "Fox watermark", font=font, fill=(255))
 
 
 inputs = glob.glob("inputs/*.jpg")
@@ -53,4 +59,5 @@ for filepath in inputs:
     image.make_square()
     image.make_grayscale()
     image.adjust_contrast()
+    image.add_watermark()
     image.save(output)
