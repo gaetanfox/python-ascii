@@ -2,6 +2,7 @@ import glob
 import os
 import shutil
 from PIL import Image, ImageOps, ImageEnhance, ImageDraw, ImageFont
+import random
 
 
 class Digitizer:
@@ -64,8 +65,28 @@ class Digitizer:
         self.adjust_contrast(5.0)
 
         self.img = self.img.resize(sample_size)
+        # r = lambda: random.randint(0, 255)
+        # mycolor = "#%02X%02X%02X" % (r(), r(), r())
 
-        ascii_img = Image.new("RGBA", final_size, color="#2727e6")
+        mycolors = [
+            "#FF8b6d9c",
+            "#FF494d7e",
+            "#FF272744",
+            "#FF205973",
+            "#FF64154d",
+            "#FF8e184b",
+            "#FFba3155",
+            "#FFd9505e",
+            "#FFc22e35",
+            "#FFd24f38",
+            "#FFdf6939",
+            "#FFed9b4a",
+            "#2727e6",
+        ]
+        mycolor = random.choice(mycolors)
+
+        ascii_img = Image.new("RGBA", final_size, color=mycolor)
+        # ascii_img = Image.new("RGBA", final_size, color="#2727e6")
 
         font = ImageFont.truetype("ibm-plex-mono.ttf", font_size)
         drawer = ImageDraw.Draw(ascii_img)
