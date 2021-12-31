@@ -7,11 +7,13 @@ from PIL import Image, ImageOps, ImageEnhance, ImageDraw, ImageFont
 class Digitizer:
     def __init__(self, filepath):
         self.filepath = filepath
-        self.img = Image.open(filepath)
+        self.img = Image.open(filepath).convert("RGBA")
 
     def save(self, output_filepath):
-        self.img.save(output_filepath)
         print("This has saved")
+        if self.filepath.endswith(".jpg"):
+            self.img = self.img.convert("RGB")
+        self.img.save(output_filepath)
 
     def adjust_contrast(self, amount=1.5):
         enhancer = ImageEnhance.Contrast(self.img)
@@ -19,7 +21,7 @@ class Digitizer:
 
     def make_grayscale(self):
         self.img = ImageOps.grayscale(self.img)
-        self.img = self.img.convert("RGB")
+        self.img = self.img.convert("RGBA")
 
     def make_upside_down(self):
         self.img = self.img.rotate(180)
@@ -43,7 +45,7 @@ class Digitizer:
         font = ImageFont.truetype("ibm-plex-mono.ttf", 16)
         drawer = ImageDraw.Draw(self.img)
 
-        drawer.text((32, 32), "Fox watermark", font=font, fill=(255))
+        drawer.text((32, 32), "Fox watermark", font=font, fill=(255, 0, 0, 100))
 
 
 inputs = glob.glob("inputs/*.jpg")
